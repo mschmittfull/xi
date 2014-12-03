@@ -8,30 +8,29 @@
 # BR copied from http://www.cs.swarthmore.edu/~newhall/unixhelp/howto_makefiles.html
 
 ## BR definitions.
-MYGSLDIR = $GSL_DIR
-
+MYGSLDIR = /usr/local
 
 # define the C compiler to use
-CC = cc
+CC = gcc
 
 # define any compile-time flags
 ##CFLAGS = -Wall -g -DREALFLOAT
 ## nevermind, make the reals doubles!!
-CFLAGS = -Wall -g -fopenmp
+CFLAGS = -Wall -g -fopenmp 
 
 # define any directories containing header files other than /usr/include
 #
-MYINCLUDE = -I$(GSL_DIR)/include
+MYINCLUDE = -I$(MYGSLDIR)/include
 
 # define library paths in addition to /usr/lib
 #   if I wanted to include libraries not in /usr/lib I'd specify
 #   their path using -Lpath, something like:
-LFLAGS = -lm -lgsl -lgslcblas -L$(GSL_DIR)/lib
+LFLAGS = -lm -lgsl -lgslcblas
 
 # define any libraries to link into executable:
 #   if I want to link in libraries (libx.so or libx.a) I use the -llibname 
 #   option, something like (this will link in libmylib.so and libm.so:
-MYLIB = -L$(GSL_DIR)/lib
+MYLIB = -L$(MYGSLDIR)/lib
 
 # define the C source files
 # SRCS = cosmoutils.c misc.c readradecz.c xibin.c header.c readnbody.c xi.c xigrid.c
@@ -77,14 +76,14 @@ xi.o: header.o misc.o xibin.o readnbody.o readradecz.o angupweight.o countpairs.
 #
 
 $(MAIN): $(OBJS) 
-	$(CC) $(CFLAGS) $(MYINCLUDE) -o $(MAIN) $(OBJS) $(LFLAGS) $(MYLIBS)
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(MAIN) $(OBJS) $(LFLAGS) $(LIBS)
 
 # this is a suffix replacement rule for building .o's from .c's
 # it uses automatic variables $<: the name of the prerequisite of
 # the rule(a .c file) and $@: the name of the target of the rule (a .o file) 
 # (see the gnu make manual section about automatic variables)
 .c.o:
-	$(CC) $(CFLAGS) $(MYINCLUDE) -c $<  -o $@
+	$(CC) $(CFLAGS) $(INCLUDES) -c $<  -o $@
 
 clean:
 	$(RM) *.o *~ $(MAIN)
